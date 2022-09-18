@@ -1,0 +1,57 @@
+.appWrapper{
+    font-family: 'Montserrat', sans-serif;
+}
+.tableWrapper{
+    overflow: scroll;
+    background-color: #C0E9FF;
+    box-shadow: 0px 5px 15px 0px rgba(0, 0, 0, 0.5);
+}
+.headerWrapper{
+    display: inline-block;
+}
+
+.headerHolder{
+    display: flex;
+    gap: 0.4rem;
+}
+.header__element{
+    text-align: center;
+    background-color: #2E9AFF;
+    color: #FFFFFE;
+
+}
+.header__element_sticky{
+    position: sticky !important;
+    left: 0;
+    z-index: 2;
+    border: 1px black solid;
+}
+.header__element_stickyTotal{
+    position: sticky !important;
+    right: 0;
+    z-index: 2;
+    border: 1px black solid;
+
+}
+.header__element__text{
+    width: inherit;
+}
+.searchHolder{
+    width: min-content;
+    margin: 2rem auto;
+}
+.searchHolder__input{
+    width: 20rem;
+    height: 2rem;
+    font-size: 1rem;
+    border-radius: 4px;
+}
+.paginationHolder{
+    margin: auto;
+    width: min-content;
+    display: flex;
+    gap: 0.5rem;
+}
+.paginationHolder__button{
+
+}

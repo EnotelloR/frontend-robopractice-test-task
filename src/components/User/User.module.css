@@ -1,0 +1,32 @@
+*{
+    box-sizing: border-box;
+}
+.rowWrapper{
+    display: inline-block;
+}
+.rowHolder{
+    display: flex;
+    gap: 0.4rem
+}
+.row__element{
+    text-align: center;
+    background-color: #75C1FE;
+    color: #FFFFFE;
+}
+.row__element_sticky{
+    position: sticky !important;
+    left: 0;
+    z-index: 2;
+    border: 1px black solid;
+
+}
+.row__element_stickyTotal{
+    position: sticky !important;
+    right: 0;
+    z-index: 2;
+    border: 1px black solid;
+
+}
+.row__element__text{
+    width: 100%;
+}
