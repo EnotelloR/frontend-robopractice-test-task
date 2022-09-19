@@ -1,5 +1,5 @@
 export interface userState {
-	users: any[];
+	users: IUser[];
 	loading: boolean;
 	error: null | string;
 }
@@ -35,3 +35,10 @@ export type UserAction =
 	| FetchUserSuccessAction
 	| FetchUserErrorAction
 	| SetUsers;
+
+export interface IUser {
+	id: number;
+	name: string;
+	times: string[];
+	total: string;
+}

@@ -1,12 +1,9 @@
 import React from 'react';
+import { IUser } from '../../types/user';
 import styles from './User.module.css';
 
 interface UserProps {
-	user: {
-		name: string;
-		times: string[];
-		total: string;
-	};
+	user: IUser;
 	sizes: number[];
 }
 
@@ -24,6 +21,7 @@ const User: React.FC<UserProps> = ({ user, sizes }) => {
 				</div>
 				{user.times.map((time, index) => (
 					<div
+						key={index}
 						className={styles.row__element}
 						style={{ minWidth: sizes[index + 1] + 'px' }}
 					>

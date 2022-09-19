@@ -14,8 +14,6 @@ export const fetchUsers = () => {
 					times: Array(31).fill('0'),
 					total: ''
 				};
-
-				//const daysArray = Array(31).fill('0');
 				let totalHours = 0;
 				let totalMinutes = 0;
 				user.Days.forEach((day: any) => {

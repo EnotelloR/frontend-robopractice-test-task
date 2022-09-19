@@ -3,6 +3,7 @@ import { Resizable } from 're-resizable';
 import User from '../User/User';
 import { useTypedSelector } from '../../hooks/useTypedSelector';
 import { useActions } from '../../hooks/useActions';
+import { IUser } from '../../types/user';
 import styles from './UserRows.module.css';
 
 const UserRows: React.FC = () => {
@@ -228,8 +229,8 @@ const UserRows: React.FC = () => {
 						</Resizable>
 					</div>
 				</div>
-				{dividedUsers.map((user) => (
-					<User user={user} sizes={sizes} />
+				{dividedUsers.map((user: IUser) => (
+					<User key={user.id} user={user} sizes={sizes} />
 				))}
 			</div>
 			<div className={styles.paginationHolder}>
