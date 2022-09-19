@@ -16,7 +16,7 @@ const UserRows: React.FC = () => {
 			.map((_, i) => i + 1)
 	);
 	const [sortOrder, setSortOrder] = useState<boolean>(false);
-	const [sizes, setSizes] = useState<number[]>(Array(32).fill(150));
+	const [sizes, setSizes] = useState<number[]>(Array(32).fill(170));
 	const [searchUserName, setSearchUserName] = useState<string>('');
 	const [selectedPage, setSelectedPage] = useState<number>(1);
 
