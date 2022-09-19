@@ -14,40 +14,14 @@ const UserRows: React.FC = () => {
 			.fill(1)
 			.map((_, i) => i + 1)
 	);
-	//const [modifiedUsers, setModifiedUsers] = useState<any[]>([...users]);
-	const [sortOrder, setSortOrder] = useState(false);
+	const [sortOrder, setSortOrder] = useState<boolean>(false);
 	const [sizes, setSizes] = useState<number[]>(Array(32).fill(150));
-	const [searchUserName, setSearchUserName] = useState('');
-	const [selectedPage, setSelectedPage] = useState(1);
+	const [searchUserName, setSearchUserName] = useState<string>('');
+	const [selectedPage, setSelectedPage] = useState<number>(1);
 
 	useEffect(() => {
 		fetchUsers();
 	}, []);
-
-	// setUsers(() =>{
-	//     return users.map(user => {
-	//         let editedUser = {
-	//             name: user.Name,
-	//             times: [""],
-	//             total: ''
-	//         };
-	//         let daysArray = []
-	//         for (let i = 0; i < 31; i++) {
-	//             daysArray[i] = "0";
-	//         }
-	//         let totalHours = 0;
-	//         let totalMinutes = 0;
-	//         user.Days.forEach((day: any) => {
-	//             let time = new Date(Date.parse(day.Date + " " + day.End.replace(/-/g, ":")) - Date.parse(day.Date + " " + day.Start.replace(/-/g, ":")))
-	//             daysArray[day.Date.getDate() - 1] = time.getUTCHours() + ":" + time.getUTCMinutes();
-	//             totalHours += time.getUTCHours();
-	//             totalMinutes += time.getUTCMinutes();
-	//         })
-	//         editedUser.times = daysArray;
-	//         editedUser.total = (totalHours + Math.trunc(totalMinutes / 60)) + ":" + (totalMinutes - Math.trunc(totalMinutes / 60) * 60)
-	//         return editedUser;
-	//     });
-	// })
 
 	const filteredUsers = useMemo(() => {
 		setSelectedPage(1);
@@ -87,49 +61,38 @@ const UserRows: React.FC = () => {
 		);
 	};
 
-	const sortingByDay = (column: number) => {
+	const timeComparer = (
+		splintedTotalA: string[],
+		splintedTotalB: string[]
+	): number => {
+		if (
+			Number(splintedTotalA[0]) * 60 + Number(splintedTotalA[1]) >
+			Number(splintedTotalB[0]) * 60 + Number(splintedTotalB[1])
+		) {
+			return sortOrder ? 1 : -1;
+		} else if (
+			Number(splintedTotalA[0]) * 60 + Number(splintedTotalA[1]) <
+			Number(splintedTotalB[0]) * 60 + Number(splintedTotalB[1])
+		) {
+			return sortOrder ? -1 : 1;
+		} else {
+			return 0;
+		}
+	};
+
+	const sortingByDay = (day: number) => {
 		setUsers(
 			users.sort((a, b) => {
-				if (a.times[column - 1] === '0' && b.times[column - 1] !== '0') {
+				if (a.times[day - 1] === '0' && b.times[day - 1] !== '0') {
 					return sortOrder ? -1 : 1;
-				} else if (a.times[column - 1] !== '0' && b.times[column - 1] === '0') {
+				} else if (a.times[day - 1] !== '0' && b.times[day - 1] === '0') {
 					return sortOrder ? 1 : -1;
-				} else if (a.times[column - 1] === '0' && b.times[column - 1] === '0') {
+				} else if (a.times[day - 1] === '0' && b.times[day - 1] === '0') {
 					return 0;
 				} else {
-					const splintedTotalA = a.times[column - 1].split(':');
-					const splintedTotalB = b.times[column - 1].split(':');
-					if (
-						splintedTotalA[0] * 60 + Number(splintedTotalA[1]) >
-						splintedTotalB[0] * 60 + Number(splintedTotalB[1])
-					) {
-						return sortOrder ? 1 : -1;
-					} else if (
-						splintedTotalA[0] * 60 + Number(splintedTotalA[1]) <
-						splintedTotalB[0] * 60 + Number(splintedTotalB[1])
-					) {
-						return sortOrder ? -1 : 1;
-					} else {
-						return 0;
-					}
-
-					// if (
-					// 	new Date(a.times[selectedDay - 1]).getUTCHours() * 60 +
-					// 		new Date(a.times[selectedDay - 1]).getUTCMinutes() >
-					// 	new Date(b.times[selectedDay - 1]).getUTCHours() * 60 +
-					// 		new Date(b.times[selectedDay - 1]).getUTCMinutes()
-					// ) {
-					// 	return sortByDay ? 1 : -1;
-					// } else if (
-					// 	new Date(a.times[selectedDay - 1]).getUTCHours() * 60 +
-					// 		new Date(a.times[selectedDay - 1]).getUTCMinutes() <
-					// 	new Date(b.times[selectedDay - 1]).getUTCHours() * 60 +
-					// 		new Date(b.times[selectedDay - 1]).getUTCMinutes()
-					// ) {
-					// 	return sortByDay ? -1 : 1;
-					// } else {
-					// 	return 0;
-					// }
+					const splintedTotalA = a.times[day - 1].split(':');
+					const splintedTotalB = b.times[day - 1].split(':');
+					return timeComparer(splintedTotalA, splintedTotalB);
 				}
 			})
 		);
@@ -140,64 +103,10 @@ const UserRows: React.FC = () => {
 			users.sort((a, b) => {
 				const splintedTotalA = a.total.split(':');
 				const splintedTotalB = b.total.split(':');
-				if (
-					splintedTotalA[0] * 60 + Number(splintedTotalA[1]) >
-					splintedTotalB[0] * 60 + Number(splintedTotalB[1])
-				) {
-					return sortOrder ? 1 : -1;
-				} else if (
-					splintedTotalA[0] * 60 + Number(splintedTotalA[1]) <
-					splintedTotalB[0] * 60 + Number(splintedTotalB[1])
-				) {
-					return sortOrder ? -1 : 1;
-				} else {
-					return 0;
-				}
+				return timeComparer(splintedTotalA, splintedTotalB);
 			})
 		);
 	};
-
-	// const sortedAndFilteredUsers = useMemo(() => {
-	//     return filteredUsers.sort((a, b) => {
-	//         if (sortingType === "name") {
-	//             if (a.name > b.name)
-	//                 return 1
-	//             else if (a.name < b.name)
-	//                 return -1;
-	//             else
-	//                 return 0;
-	//         } else if (totalSort) {
-	//             let splintedTotalA = a.total.split(":");
-	//             let splintedTotalB = b.total.split(":");
-	//             if (splintedTotalA[0] > splintedTotalB[0])
-	//                 return 1;
-	//             else if (splintedTotalA[0] < splintedTotalB[0])
-	//                 return -1;
-	//             else {
-	//                 if (splintedTotalA[1] > splintedTotalB[1])
-	//                     return 1;
-	//                 else if (splintedTotalA[1] < splintedTotalB[1])
-	//                     return -1;
-	//                 else
-	//                     return 0;
-	//             }
-	//         } else if (daySort) {
-	//             if (new Date(a.times[daySort]).getUTCHours() > new Date(b.times[daySort]).getUTCHours())
-	//                 return 1;
-	//             else if (new Date(a.times[daySort]).getUTCHours() < new Date(b.times[daySort]).getUTCHours())
-	//                 return -1;
-	//             else {
-	//                 if (new Date(a.times[daySort]).getUTCMinutes() > new Date(b.times[daySort]).getUTCMinutes())
-	//                     return 1;
-	//                 else if (new Date(a.times[daySort]).getUTCMinutes() > new Date(b.times[daySort]).getUTCMinutes())
-	//                     return -1;
-	//                 else
-	//                     return 0;
-	//             }
-	//         }
-	//         return 0;
-	//     });
-	// }, [filteredUsers, sortingType]);
 
 	return (
 		<div className={styles.appWrapper}>
@@ -205,7 +114,7 @@ const UserRows: React.FC = () => {
 				<input
 					className={styles.searchHolder__input}
 					value={searchUserName}
-					placeholder={'Insert a name for filtering'}
+					placeholder={'Print a name for filtering'}
 					onChange={(event) => setSearchUserName(event.target.value)}
 				/>
 			</div>
@@ -236,15 +145,16 @@ const UserRows: React.FC = () => {
 								});
 							}}
 						>
-							<p
+							<div
 								className={styles.header__element__text}
+								title={'Нажмите для сортировки'}
 								onClick={() => {
 									setSortOrder(!sortOrder);
 									sortingByName();
 								}}
 							>
 								User
-							</p>
+							</div>
 						</Resizable>
 						{columns.map((column, index) => (
 							<Resizable
@@ -269,15 +179,16 @@ const UserRows: React.FC = () => {
 									});
 								}}
 							>
-								<p
+								<div
 									className={styles.header__element__text}
+									title={'Нажмите для сортировки'}
 									onClick={() => {
 										setSortOrder(!sortOrder);
 										sortingByDay(column);
 									}}
 								>
 									{column}
-								</p>
+								</div>
 							</Resizable>
 						))}
 						<Resizable
@@ -304,15 +215,16 @@ const UserRows: React.FC = () => {
 								});
 							}}
 						>
-							<p
+							<div
 								className={styles.header__element__text}
+								title={'Нажмите для сортировки'}
 								onClick={() => {
 									setSortOrder(!sortOrder);
 									sortingByTotal();
 								}}
 							>
 								Monthly total
-							</p>
+							</div>
 						</Resizable>
 					</div>
 				</div>
@@ -323,9 +235,11 @@ const UserRows: React.FC = () => {
 			<div className={styles.paginationHolder}>
 				{pages.map((p) => (
 					<button
-						className={styles.paginationHolder__button}
+						className={[
+							styles.paginationHolder__button,
+							p === selectedPage ? styles.paginationHolder__button_selected : ''
+						].join(' ')}
 						key={p}
-						style={{ color: p === selectedPage ? 'red' : 'black' }}
 						onClick={() => setSelectedPage(p)}
 					>
 						{p}
